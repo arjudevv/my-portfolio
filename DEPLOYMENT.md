@@ -23,19 +23,20 @@ Vercel is the easiest and most optimized platform for Next.js applications.
 1. Go to [vercel.com](https://vercel.com) and sign up/login (free account works)
 2. Click "Add New Project"
 3. Import your repository
-4. **IMPORTANT**: Before deploying, click "Configure Project" or go to Settings → General
-5. Set the **Root Directory** to `apps/web` (this is critical for monorepos!)
-   - Click "Edit" next to Root Directory
+4. **CRITICAL STEP**: Before clicking "Deploy", you MUST set the Root Directory:
+   - Click "Configure Project" or the "..." menu → "Settings"
+   - Scroll to "Root Directory" section
+   - Click "Edit" 
    - Enter: `apps/web`
    - Click "Save"
-6. Vercel will auto-detect Next.js and configure:
+5. Vercel will auto-detect Next.js and configure everything automatically:
    - **Framework Preset**: Next.js (auto-detected)
    - **Build Command**: `npm run build` (runs from apps/web directory)
    - **Output Directory**: `.next` (default)
    - **Install Command**: `npm install` (runs from apps/web directory)
-7. Click "Deploy"
+6. Click "Deploy"
 
-**Note**: The `vercel.json` file in your repo is configured to work with Root Directory set to `apps/web`. If you don't set the Root Directory, the build will fail.
+**Important**: If you don't set the Root Directory to `apps/web`, the build will fail with "No such file or directory" error. This is the most common issue with monorepo deployments.
 
 ### Step 3: Add Custom Domain
 
