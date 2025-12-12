@@ -75,6 +75,80 @@ Vercel is the easiest and most optimized platform for Next.js applications.
 - Vercel automatically provisions SSL certificates via Let's Encrypt
 - Your site will be available at `https://arjunraju.in` automatically
 
+### Step 6: Automatic Deployments (Already Enabled!)
+
+**Good news**: Automatic deployments are **already enabled by default** when you connect a Git repository to Vercel! 🎉
+
+#### How It Works
+
+1. **Automatic Production Deployments**
+   - Every push to your `main` (or `master`) branch automatically triggers a new production deployment
+   - Vercel builds and deploys your site automatically
+   - Your live site at `arjunraju.in` updates within 1-2 minutes
+
+2. **Preview Deployments**
+   - Every push to other branches creates a preview deployment
+   - You get a unique URL for each branch/PR to test changes
+   - Perfect for testing before merging to main
+
+3. **Pull Request Deployments**
+   - Every pull request gets its own preview deployment
+   - Share the preview URL with team members for review
+   - Comments and feedback can be added directly on the preview
+
+#### Verify Automatic Deployments Are Enabled
+
+1. Go to your Vercel project dashboard
+2. Click on **Settings** → **Git**
+3. You should see your connected repository listed
+4. Under "Production Branch", ensure it's set to `main` (or your default branch)
+5. The "Automatic deployments" toggle should be **ON** (this is the default)
+
+#### Configure Deployment Settings (Optional)
+
+You can customize deployment behavior in **Settings** → **Git**:
+
+- **Production Branch**: Which branch deploys to production (default: `main`)
+- **Automatic deployments**: Toggle automatic deployments on/off
+- **Ignore Build Step**: Skip builds for certain commits (useful for docs-only changes)
+- **Deploy Hooks**: Create webhooks for external integrations
+
+#### Test Automatic Deployment
+
+To test that automatic deployments work:
+
+```bash
+# Make a small change to your code
+echo "<!-- Test deployment -->" >> apps/web/src/app/page.tsx
+
+# Commit and push
+git add .
+git commit -m "Test automatic deployment"
+git push
+```
+
+Within 1-2 minutes, you should see:
+1. A new deployment appear in your Vercel dashboard
+2. The deployment status (Building → Ready)
+3. Your live site updated with the changes
+
+#### Deployment Notifications
+
+Vercel can notify you about deployments via:
+- **Email**: Automatic email notifications for deployment status
+- **Slack**: Connect your Slack workspace in Settings → Integrations
+- **GitHub**: Deployment status appears as checks on your commits/PRs
+
+#### View Deployment History
+
+- Go to your project dashboard
+- Click on the **Deployments** tab
+- See all deployments with:
+  - Commit message and author
+  - Build time and status
+  - Preview URLs for branch deployments
+  - Ability to redeploy or rollback
+
 ---
 
 ## Option 2: Deploy with Netlify

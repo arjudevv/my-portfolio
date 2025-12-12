@@ -40,8 +40,11 @@ Your site will be live at https://arjunraju.in
 **Note**: Vercel automatically handles:
 - ✅ SSL certificates (HTTPS)
 - ✅ CDN (fast global delivery)
-- ✅ Automatic deployments on git push
+- ✅ **Automatic deployments on every git push** (no manual steps needed!)
 - ✅ Preview deployments for pull requests
 
+**After initial setup, just push to GitHub and your site updates automatically!**
+
 For detailed instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+For automatic deployment workflow, see [AUTOMATIC_DEPLOYMENTS.md](./AUTOMATIC_DEPLOYMENTS.md)
 
