@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useMemo, type Ref } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -8,7 +8,7 @@ import * as THREE from 'three';
  * Custom shader material for neon robotic shimmer effect
  * Creates a cyberpunk-style animated edge glow
  */
-class NeonRoboticMaterial extends THREE.ShaderMaterial {
+export class NeonRoboticMaterial extends THREE.ShaderMaterial {
   constructor() {
     super({
       uniforms: {
@@ -93,17 +93,6 @@ class NeonRoboticMaterial extends THREE.ShaderMaterial {
 
 extend({ NeonRoboticMaterial });
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      neonRoboticMaterial: {
-        ref?: Ref<NeonRoboticMaterial>;
-        [key: string]: any;
-      };
-    }
-  }
-}
-
 /**
  * React component wrapper for the neon robotic material
  */
@@ -125,6 +114,7 @@ export function NeonRoboticMaterialComponent({
   });
 
   return (
+    // @ts-ignore - Custom material element extended via extend()
     <neonRoboticMaterial ref={materialRef} />
   );
 }
