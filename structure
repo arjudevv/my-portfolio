@@ -1,0 +1,12 @@
+/portfolio-monorepo
+├─ apps/
+│  ├─ web/                # Next.js (frontend)
+│  └─ api/                # Node/TypeScript backend (Express/Fastify) or serverless functions
+├─ packages/
+│  ├─ ui/                 # shared React components
+│  └─ ui-shared/          # types, utils
+├─ infra/                 # Dockerfiles, k8s/terraform snippets
+├─ docs/                  # API docs, swagger.json
+├─ mobile/                # Android project (or link to Play Store / repo)
+├─ package.json
+└─ turbo.json / pnpm-workspace.yaml
