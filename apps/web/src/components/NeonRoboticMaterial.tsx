@@ -1,9 +1,8 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useRef, useMemo, type Ref } from 'react';
+import { useFrame, extend } from '@react-three/fiber';
 import * as THREE from 'three';
-import { extend } from '@react-three/fiber';
 
 /**
  * Custom shader material for neon robotic shimmer effect
@@ -97,7 +96,10 @@ extend({ NeonRoboticMaterial });
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      neonRoboticMaterial: any;
+      neonRoboticMaterial: {
+        ref?: Ref<NeonRoboticMaterial>;
+        [key: string]: any;
+      };
     }
   }
 }
