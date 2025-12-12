@@ -3,14 +3,11 @@
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
-import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);
-  const [platformsOpen, setPlatformsOpen] = useState(false);
   const projectsRef = useRef<HTMLDivElement>(null);
-  const platformsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,9 +22,6 @@ export default function Navbar() {
       if (projectsRef.current && !projectsRef.current.contains(event.target as Node)) {
         setProjectsOpen(false);
       }
-      if (platformsRef.current && !platformsRef.current.contains(event.target as Node)) {
-        setPlatformsOpen(false);
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -37,7 +31,6 @@ export default function Navbar() {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/blog', label: 'Blog' },
-    { href: '/api-docs', label: 'API Docs' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -76,7 +69,6 @@ export default function Navbar() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setProjectsOpen(!projectsOpen);
-                  setPlatformsOpen(false);
                 }}
                 className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors flex items-center gap-1"
               >
@@ -108,48 +100,6 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-
-            {/* Platforms Dropdown */}
-            <div className="relative hidden sm:block" ref={platformsRef}>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setPlatformsOpen(!platformsOpen);
-                  setProjectsOpen(false);
-                }}
-                className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors flex items-center gap-1"
-              >
-                Platforms {platformsOpen ? '▲' : '▼'}
-              </motion.button>
-              <AnimatePresence>
-                {platformsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full mt-2 right-0 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 min-w-[180px] overflow-hidden"
-                  >
-                    <Link
-                      href="/android"
-                      className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
-                      onClick={() => setPlatformsOpen(false)}
-                    >
-                      Android
-                    </Link>
-                    <Link
-                      href="/backend"
-                      className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
-                      onClick={() => setPlatformsOpen(false)}
-                    >
-                      Backend
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <ThemeToggle />
           </div>
         </div>
       </div>

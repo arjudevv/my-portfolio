@@ -60,13 +60,32 @@ export default function Contact() {
             Have a project in mind or want to collaborate? Feel free to reach out!
           </p>
 
-          <div className="mb-8 md:mb-12 text-center">
-            <a
-              href="mailto:arjun@example.com"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-base md:text-lg font-medium transition-colors"
-            >
-              arjun@example.com
-            </a>
+          <div className="mb-8 md:mb-12">
+            <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-6 md:p-8 border border-zinc-200 dark:border-zinc-800 space-y-4">
+              <div className="text-center space-y-4">
+                <div>
+                  <a
+                    href="mailto:arjunrajuv@yahoo.com"
+                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-base md:text-lg font-medium transition-colors block"
+                  >
+                    arjunrajuv@yahoo.com
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://linkedin.com/in/arjun-raju-v"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-base md:text-lg font-medium transition-colors block"
+                  >
+                    linkedin.com/in/arjun-raju-v
+                  </a>
+                </div>
+                <div className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg">
+                  Kochi, Kerala, India
+                </div>
+              </div>
+            </div>
           </div>
 
           <motion.form

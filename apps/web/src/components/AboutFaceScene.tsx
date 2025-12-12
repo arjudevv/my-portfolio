@@ -90,7 +90,10 @@ export default function AboutFaceScene() {
     >
       <Canvas
         camera={{ position: [0, -0.7, 1.5], fov: 45 }}
-        gl={{ antialias: true, alpha: true, clearColor: 0x000000, clearAlpha: 0 }}
+        gl={{ antialias: true, alpha: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
         className="w-full h-full"
         aria-hidden="false"
         role="img"

@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arjun.dev'),
   title: {
-    default: "Arjun • Full Stack Developer",
+    default: "Arjun • Android Developer",
     template: "%s | Arjun",
   },
-  description: "Portfolio of Arjun - Full Stack Developer specializing in Web, Android, and Backend development. Building modern applications with cutting-edge technologies.",
-  keywords: ["Full Stack Developer", "Web Development", "Android Development", "Backend Development", "React", "Next.js", "Node.js"],
+  description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications with a focus on performance optimization and modern Android development practices.",
+  keywords: ["Android Developer", "Kotlin", "Java", "Android SDK", "Mobile Development", "Firebase", "Android Studio", "Mobile Apps"],
   authors: [{ name: "Arjun" }],
   creator: "Arjun",
   openGraph: {
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://arjun.dev",
     siteName: "Arjun Portfolio",
-    title: "Arjun • Full Stack Developer",
-    description: "Portfolio of Arjun - Full Stack Developer specializing in Web, Android, and Backend development.",
+    title: "Arjun • Android Developer",
+    description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications.",
     images: [
       {
         url: "/og-image.jpg",
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arjun • Full Stack Developer",
-    description: "Portfolio of Arjun - Full Stack Developer specializing in Web, Android, and Backend development.",
+    title: "Arjun • Android Developer",
+    description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -72,38 +72,33 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Arjun",
-    jobTitle: "Full Stack Developer",
+    jobTitle: "Android Developer",
     url: "https://arjun.dev",
     sameAs: [
-      "https://github.com/arjun",
-      "https://linkedin.com/in/arjun",
+      "https://linkedin.com/in/arjun-raju-v",
     ],
     knowsAbout: [
-      "Web Development",
       "Android Development",
-      "Backend Development",
-      "React",
-      "Next.js",
-      "Node.js",
-      "TypeScript",
+      "Kotlin",
+      "Java",
+      "Android SDK",
+      "Firebase",
+      "Mobile Development",
+      "Android Studio",
+      "Performance Optimization",
     ],
   };
 
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const stored = localStorage.getItem('theme');
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const theme = stored || (prefersDark ? 'dark' : 'light');
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
+                // Always force dark mode
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
               })();
             `,
           }}

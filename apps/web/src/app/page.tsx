@@ -106,14 +106,13 @@ export default function Home() {
               ref={heroSubtitleRef}
               className="text-xl md:text-2xl lg:text-3xl text-zinc-700 dark:text-zinc-300 mb-6 md:mb-8"
             >
-              Full Stack Developer
+              Android Developer
             </p>
             <p
               ref={heroDescriptionRef}
               className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed"
             >
-              Building modern web applications with cutting-edge technologies.
-              Passionate about creating seamless user experiences and scalable solutions.
+              Designing, developing, and delivering high-quality, user-centric mobile applications. Proficient in Kotlin, Java, and the Android SDK, with a strong focus on performance optimization, clean architecture, and modern Android development practices.
             </p>
             <div
               ref={heroButtonsRef}
@@ -136,45 +135,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Platform Links Section */}
-      <div className="relative z-10 pb-16 md:pb-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-xl p-6 md:p-8 border border-zinc-200 dark:border-zinc-700 hover:shadow-xl transition-shadow"
-            >
-              <Link href="/android">
-                <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                  Android Development
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  Native Android apps with modern architecture patterns and Material Design
-                </p>
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-xl p-6 md:p-8 border border-zinc-200 dark:border-zinc-700 hover:shadow-xl transition-shadow"
-            >
-              <Link href="/backend">
-                <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                  Backend Development
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  Scalable server-side systems with Node.js, databases, and cloud infrastructure
-                </p>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
