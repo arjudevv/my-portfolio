@@ -20,7 +20,7 @@ export default function HeroScene() {
   const [hasWebGL, setHasWebGL] = useState<boolean | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isInteractive, setIsInteractive] = useState(false);
+  const [isInteractive] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -75,17 +75,6 @@ export default function HeroScene() {
 
   return (
     <div ref={containerRef} className="absolute inset-0">
-      {/* Accessible button to enable interactive mode */}
-      {!isInteractive && (
-        <button
-          onClick={() => setIsInteractive(true)}
-          className="absolute bottom-4 left-4 z-10 px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg text-sm hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
-          aria-label="Enable interactive 3D scene"
-        >
-          View Interactive Scene
-        </button>
-      )}
-
       {isVisible ? (
         <Canvas
           camera={{ position: [0, 0, 5], fov: 50 }}
