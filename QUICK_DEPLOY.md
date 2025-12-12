@@ -13,8 +13,9 @@ git push
 1. Go to https://vercel.com and sign up (free)
 2. Click "Add New Project"
 3. Import your GitHub repository
-4. **Important**: Set "Root Directory" to `apps/web` in project settings
-5. Click "Deploy"
+4. **CRITICAL**: Before deploying, click "Configure Project" or go to Settings → General
+5. Set **Root Directory** to `apps/web` and click "Save"
+6. Click "Deploy"
 
 ### 3. Add Your Domain
 1. In Vercel project → Settings → Domains

@@ -23,13 +23,19 @@ Vercel is the easiest and most optimized platform for Next.js applications.
 1. Go to [vercel.com](https://vercel.com) and sign up/login (free account works)
 2. Click "Add New Project"
 3. Import your repository
-4. Configure the project:
+4. **IMPORTANT**: Before deploying, click "Configure Project" or go to Settings → General
+5. Set the **Root Directory** to `apps/web` (this is critical for monorepos!)
+   - Click "Edit" next to Root Directory
+   - Enter: `apps/web`
+   - Click "Save"
+6. Vercel will auto-detect Next.js and configure:
    - **Framework Preset**: Next.js (auto-detected)
-   - **Root Directory**: `apps/web` (since this is a monorepo)
-   - **Build Command**: `cd apps/web && npm run build`
+   - **Build Command**: `npm run build` (runs from apps/web directory)
    - **Output Directory**: `.next` (default)
-   - **Install Command**: `cd apps/web && npm install`
-5. Click "Deploy"
+   - **Install Command**: `npm install` (runs from apps/web directory)
+7. Click "Deploy"
+
+**Note**: The `vercel.json` file in your repo is configured to work with Root Directory set to `apps/web`. If you don't set the Root Directory, the build will fail.
 
 ### Step 3: Add Custom Domain
 
@@ -176,6 +182,26 @@ For a Next.js portfolio, **Vercel is highly recommended** because:
 - For self-hosting, ensure port 80 is open for Let's Encrypt verification
 
 ### Build Errors
+
+#### "No such file or directory" Error
+If you see `cd: apps/web: No such file or directory`:
+
+1. **Verify your GitHub repository structure:**
+   - Check that your repo has the `apps/web` directory
+   - Make sure you've pushed all files: `git add . && git commit -m "..." && git push`
+
+2. **Set Root Directory in Vercel (RECOMMENDED):**
+   - Go to your Vercel project → Settings → General
+   - Find "Root Directory" section
+   - Click "Edit" and set it to `apps/web`
+   - Save and redeploy
+   - This tells Vercel to treat `apps/web` as the project root
+
+3. **Alternative: Update vercel.json**
+   - If your repo structure is different, update `vercel.json` paths accordingly
+   - Or remove `vercel.json` and configure everything in Vercel UI
+
+#### Other Build Errors
 - Check that all dependencies are in `package.json`
 - Ensure Node.js version matches (check `.nvmrc` or `package.json` engines)
 - Review build logs in deployment platform
