@@ -10,14 +10,28 @@ Interactive 3D portfolio built with Next.js, React Three Fiber, GSAP, and Framer
 
 ## Enable GitHub Pages (one-time)
 
-The site is built and deployed automatically to the `gh-pages` branch on every push to `main`. To make it publicly accessible:
+GitHub Pages must be enabled once before the deploy workflow can publish the site.
 
 1. Open **[Repository Settings → Pages](https://github.com/arjudevv/my-portfolio/settings/pages)**
-2. Under **Build and deployment** → **Source**, select **Deploy from a branch**
-3. Set **Branch** to `gh-pages` and folder to `/ (root)`
-4. Click **Save**
+2. Under **Build and deployment** → **Source**, choose **GitHub Actions**
+3. Save (no branch selection needed — the workflow handles deployment)
 
-GitHub will publish the site within 1–2 minutes at the URL above.
+If GitHub Actions source is unavailable, use the fallback:
+
+1. Set **Source** to **Deploy from a branch**
+2. Branch: `gh-pages`, folder: `/ (root)`
+
+The site will be live at **https://arjudevv.github.io/my-portfolio/** within 1–2 minutes.
+
+## Vercel
+
+Vercel is connected to this repo. The root `vercel.json` configures the monorepo to build from `apps/web`.
+
+If Vercel builds still fail, verify in [Vercel Project Settings](https://vercel.com/dashboard):
+
+- **Root Directory:** `apps/web` (or leave blank to use root `vercel.json`)
+- **Framework:** Next.js
+- **Output Directory:** `out` (static export)
 
 ## Development
 
