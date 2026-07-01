@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { projects } from '@/content/projects';
+import { SITE_URL } from '@/lib/site-url';
 
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://arjun.dev';
+  const baseUrl = SITE_URL;
 
   return [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'monthly', priority: 1 },

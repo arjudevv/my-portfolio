@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 import { AppProviders } from '@/components/providers/AppProviders';
+import { SITE_URL } from '@/lib/site-url';
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-heading',
@@ -18,7 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arjun.dev'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Arjun • Senior Android Developer',
     template: '%s | Arjun',
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://arjun.dev',
+    url: SITE_URL,
     siteName: 'Arjun Portfolio',
     title: 'Arjun • Senior Android Developer',
     description:
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
     images: ['/og-image.svg'],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: 'https://arjun.dev' },
+  alternates: { canonical: SITE_URL },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -64,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@type': 'Person',
     name: 'Arjun',
     jobTitle: 'Senior Android Developer',
-    url: 'https://arjun.dev',
+    url: SITE_URL,
     sameAs: ['https://linkedin.com/in/arjun-raju-v', 'https://github.com/arjun-raju-v'],
     knowsAbout: [
       'Android Development',
