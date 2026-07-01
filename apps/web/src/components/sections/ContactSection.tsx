@@ -11,19 +11,33 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function ContactSection() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
 
     setStatus('sending');
+    setErrorMessage('');
 
-    const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
-    const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
 
-    setStatus('sent');
-    setForm({ name: '', email: '', message: '' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setStatus('sent');
+      setForm({ name: '', email: '', message: '' });
+    } catch (err) {
+      setStatus('error');
+      setErrorMessage(err instanceof Error ? err.message : 'Something went wrong');
+    }
   };
 
   const links = [
@@ -45,18 +59,15 @@ export default function ContactSection() {
           <Card className="card-glass">
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="relative">
+                <div>
                   <Input
                     id="name"
-                    placeholder=" "
+                    placeholder="Your name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
                     aria-label="Your name"
                   />
-                  <label htmlFor="name" className="absolute left-4 top-3 text-muted text-sm pointer-events-none transition-all peer-focus:top-1 peer-focus:text-xs">
-                    Name
-                  </label>
                 </div>
                 <div>
                   <Input
@@ -81,8 +92,14 @@ export default function ContactSection() {
                     className="flex w-full rounded-xl border border-glass bg-surface/50 px-4 py-3 text-white placeholder:text-muted backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary resize-none"
                   />
                 </div>
+                {status === 'error' && (
+                  <p className="text-sm text-red-400" role="alert">{errorMessage}</p>
+                )}
+                {status === 'sent' && (
+                  <p className="text-sm text-success" role="status">Message sent successfully!</p>
+                )}
                 <Button type="submit" size="lg" className="w-full" disabled={status === 'sending'} data-magnetic>
-                  {status === 'sent' ? 'Opening email client...' : status === 'sending' ? 'Sending...' : 'Send Message'}
+                  {status === 'sending' ? 'Sending...' : 'Send Message'}
                 </Button>
               </form>
             </CardContent>

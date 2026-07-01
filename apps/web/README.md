@@ -9,13 +9,7 @@ Award-winning interactive portfolio built with Next.js, React Three Fiber, GSAP,
 - **3D:** React Three Fiber, Three.js, Postprocessing, Spline
 - **Animation:** Framer Motion, GSAP, Lenis, Motion One
 - **UI:** Shadcn-style components, Lucide Icons
-- **Deployment:** GitHub Pages, Firebase Hosting (static export)
-
-## Live Site
-
-**GitHub Pages:** [https://arjudevv.github.io/my-portfolio/](https://arjudevv.github.io/my-portfolio/)
-
-Deployed automatically on every push to `main` via GitHub Actions.
+- **Deployment:** Vercel
 
 ## Getting Started
 
@@ -32,9 +26,22 @@ Open [http://localhost:3000](http://localhost:3000).
 | Script | Description |
 |--------|-------------|
 | `npm run dev` | Start development server |
-| `npm run build` | Production static export to `out/` |
+| `npm run build` | Production build |
 | `npm run lint` | Run ESLint |
-| `npm start` | Serve production build (non-static) |
+| `npm start` | Serve production build |
+
+## Vercel Deployment
+
+This app lives in a monorepo. In [Vercel project settings](https://vercel.com/dashboard), set **Root Directory** to `apps/web`.
+
+Pushes to `main` deploy automatically.
+
+## Environment Variables
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX   # Optional Google Analytics
+```
 
 ## Project Structure
 
@@ -54,49 +61,6 @@ src/
 ├── lib/              # Utilities
 └── types/            # TypeScript interfaces
 ```
-
-## Environment Variables
-
-```env
-NEXT_PUBLIC_SITE_URL=https://arjun.dev
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX   # Optional Google Analytics
-```
-
-## GitHub Pages Deployment
-
-The site deploys automatically when you push to `main`. The workflow is at `.github/workflows/deploy-github-pages.yml`.
-
-**Live URL:** https://arjudevv.github.io/my-portfolio/
-
-To build locally for GitHub Pages:
-
-```bash
-GITHUB_PAGES=true NEXT_PUBLIC_SITE_URL=https://arjudevv.github.io/my-portfolio npm run build
-```
-
-## Firebase Hosting Deployment
-
-1. Install Firebase CLI:
-   ```bash
-   npm install -g firebase-tools
-   ```
-
-2. Login and initialize:
-   ```bash
-   firebase login
-   firebase init hosting
-   ```
-   - Public directory: `out`
-   - Single-page app: Yes
-   - Overwrite `firebase.json`: No (already configured)
-
-3. Update `.firebaserc` with your Firebase project ID.
-
-4. Build and deploy:
-   ```bash
-   npm run build
-   firebase deploy
-   ```
 
 ## Performance Notes
 
