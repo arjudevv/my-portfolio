@@ -1,123 +1,109 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ThemeProvider from "@/components/ThemeProvider";
+import type { Metadata } from 'next';
+import { Space_Grotesk, Inter } from 'next/font/google';
+import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/react';
+import './globals.css';
+import { AppProviders } from '@/components/providers/AppProviders';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-heading',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: '--font-body',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://arjun.dev'),
   title: {
-    default: "Arjun • Android Developer",
-    template: "%s | Arjun",
+    default: 'Arjun • Senior Android Developer',
+    template: '%s | Arjun',
   },
-  description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications with a focus on performance optimization and modern Android development practices.",
-  keywords: ["Android Developer", "Kotlin", "Java", "Android SDK", "Mobile Development", "Firebase", "Android Studio", "Mobile Apps"],
-  authors: [{ name: "Arjun" }],
-  creator: "Arjun",
+  description:
+    'Portfolio of Arjun - Senior Android Developer specializing in Kotlin, Jetpack Compose, Clean Architecture, Firebase, and full-stack mobile development.',
+  keywords: [
+    'Android Developer',
+    'Senior Android Developer',
+    'Kotlin',
+    'Jetpack Compose',
+    'Clean Architecture',
+    'Firebase',
+    'Node.js',
+    'AWS',
+    'Mobile Development',
+  ],
+  authors: [{ name: 'Arjun' }],
+  creator: 'Arjun',
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://arjun.dev",
-    siteName: "Arjun Portfolio",
-    title: "Arjun • Android Developer",
-    description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Arjun Portfolio",
-      },
-    ],
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://arjun.dev',
+    siteName: 'Arjun Portfolio',
+    title: 'Arjun • Senior Android Developer',
+    description:
+      'Interactive portfolio of Arjun - Senior Android Developer building mobile apps, backend systems, and scalable products.',
+    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Arjun Portfolio' }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Arjun • Android Developer",
-    description: "Portfolio of Arjun - Android Developer specializing in Kotlin, Java, and Android SDK. Designing and delivering high-quality, user-centric mobile applications.",
-    images: ["/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'Arjun • Senior Android Developer',
+    description: 'Interactive portfolio of Arjun - Senior Android Developer.',
+    images: ['/og-image.svg'],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code",
-  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: 'https://arjun.dev' },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Arjun",
-    jobTitle: "Android Developer",
-    url: "https://arjun.dev",
-    sameAs: [
-      "https://linkedin.com/in/arjun-raju-v",
-    ],
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Arjun',
+    jobTitle: 'Senior Android Developer',
+    url: 'https://arjun.dev',
+    sameAs: ['https://linkedin.com/in/arjun-raju-v', 'https://github.com/arjun-raju-v'],
     knowsAbout: [
-      "Android Development",
-      "Kotlin",
-      "Java",
-      "Android SDK",
-      "Firebase",
-      "Mobile Development",
-      "Android Studio",
-      "Performance Optimization",
+      'Android Development',
+      'Kotlin',
+      'Jetpack Compose',
+      'Clean Architecture',
+      'Firebase',
+      'Node.js',
+      'AWS',
+      'PostgreSQL',
+      'Docker',
+      'CI/CD',
     ],
   };
 
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
-    <html lang="en" className="scroll-smooth dark" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                // Always force dark mode
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-              })();
-            `,
+            __html: `document.documentElement.classList.add('dark');`,
           }}
         />
-        <link rel="canonical" href="https://arjun.dev" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+      <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-background text-text`}>
+        <AppProviders>{children}</AppProviders>
+        <Analytics />
+        {gaId && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
 }
-

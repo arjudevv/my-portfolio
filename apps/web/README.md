@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arjun — Interactive 3D Developer Portfolio
+
+Award-winning interactive portfolio built with Next.js, React Three Fiber, GSAP, and Framer Motion. A cinematic single-page experience showcasing Android development expertise.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router), TypeScript
+- **Styling:** Tailwind CSS v4
+- **3D:** React Three Fiber, Three.js, Postprocessing, Spline
+- **Animation:** Framer Motion, GSAP, Lenis, Motion One
+- **UI:** Shadcn-style components, Lucide Icons
+- **Deployment:** Firebase Hosting (static export)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+cd apps/web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production static export to `out/` |
+| `npm run lint` | Run ESLint |
+| `npm start` | Serve production build (non-static) |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/              # Next.js App Router pages
+├── animations/       # GSAP scroll choreography
+├── components/
+│   ├── sections/     # Portfolio sections (Hero, About, etc.)
+│   ├── ui/           # Reusable UI primitives
+│   ├── loading/      # Intro loader
+│   ├── cursor/       # Custom cursor
+│   └── providers/    # Lenis, Sound, App providers
+├── content/          # Site copy, projects, skills data
+├── three/            # R3F scene manager & 3D content
+├── hooks/            # Custom React hooks
+├── lib/              # Utilities
+└── types/            # TypeScript interfaces
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_SITE_URL=https://arjun.dev
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX   # Optional Google Analytics
+```
 
-## Deploy on Vercel
+## Firebase Hosting Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Install Firebase CLI:
+   ```bash
+   npm install -g firebase-tools
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Login and initialize:
+   ```bash
+   firebase login
+   firebase init hosting
+   ```
+   - Public directory: `out`
+   - Single-page app: Yes
+   - Overwrite `firebase.json`: No (already configured)
+
+3. Update `.firebaserc` with your Firebase project ID.
+
+4. Build and deploy:
+   ```bash
+   npm run build
+   firebase deploy
+   ```
+
+## Performance Notes
+
+- Single WebGL canvas with scroll-driven scene states
+- Dynamic imports for 3D components and Spline
+- Mobile quality tiers via `PolishContext`
+- `prefers-reduced-motion` disables Lenis, loader, cursor, and heavy postprocessing
+- Images use SVG placeholders; replace with optimized WebP/AVIF for production
+
+## Credits
+
+- Design inspiration: Awwwards, Linear, Stripe, Bruno Simon
+- Fonts: Space Grotesk, Inter (Google Fonts)
+- 3D: React Three Fiber ecosystem, Spline
+
+## License
+
+See repository LICENSE file.

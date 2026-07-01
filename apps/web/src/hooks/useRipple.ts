@@ -1,14 +1,12 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 
 /**
  * Hook for creating ripple effects on button clicks
  * Returns a handler that creates a ripple animation
  */
 export function useRipple() {
-  const rippleRef = useRef<HTMLSpanElement | null>(null);
-
   const createRipple = useCallback((event: React.MouseEvent<HTMLElement>) => {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();

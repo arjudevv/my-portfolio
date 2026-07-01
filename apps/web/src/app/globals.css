@@ -1,27 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-primary: #4f46e5;
-  --color-accent: #06b6d4;
-  --noise-opacity: 0.03;
-  --gradient-a: 220 80% 60%;
-  --gradient-b: 270 75% 55%;
+  --background: #050505;
+  --surface: #101010;
+  --glass: rgba(255, 255, 255, 0.08);
+  --primary: #5B8CFF;
+  --secondary: #8A5CFF;
+  --accent: #00E5FF;
+  --success: #00FFB0;
+  --text: #FFFFFF;
+  --muted: #AAAAAA;
+  --foreground: #FFFFFF;
+  --noise-opacity: 0.04;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-glass: var(--glass);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* Dark mode is controlled via .dark class, not media query */
-/* This prevents conflicts with user preference toggle */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
 }
 
 html {
@@ -30,11 +35,31 @@ html {
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Reduced motion support */
+.font-heading {
+  font-family: var(--font-heading), system-ui, sans-serif;
+}
+
+.text-display {
+  font-size: clamp(3rem, 10vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.text-body-lg {
+  font-size: clamp(1.125rem, 1.2vw, 1.375rem);
+  line-height: 1.7;
+}
+
+.section-padding {
+  padding-top: clamp(5rem, 12vh, 8rem);
+  padding-bottom: clamp(5rem, 12vh, 8rem);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -46,30 +71,19 @@ body {
   }
 }
 
-/* Glass morphism utility */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glass {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Glass card utility */
 .card-glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-  backdrop-filter: blur(6px);
-  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.dark .card-glass {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
-}
-
-/* Noise overlay */
 .noise {
   position: fixed;
   inset: 0;
@@ -77,46 +91,18 @@ body {
   z-index: 60;
   background-image: url('/assets/noise.png');
   background-repeat: repeat;
-  opacity: var(--noise-opacity, 0.03);
+  opacity: var(--noise-opacity, 0.04);
   mix-blend-mode: overlay;
 }
 
-/* Fallback for noise if image doesn't exist */
-.noise::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px
-    );
-}
-
-/* Soft shadows */
-.shadow-soft {
-  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
-}
-
 .shadow-glass {
-  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(91, 140, 255, 0.05);
 }
 
-/* Ripple effect for buttons */
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
   transform: scale(0);
   animation: ripple-animation 0.6s ease-out;
   pointer-events: none;
@@ -129,17 +115,10 @@ body {
   }
 }
 
-/* Gradient shift animation for hero background */
 @keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .animate-gradient-shift {
@@ -147,7 +126,24 @@ body {
   animation: gradient-shift 15s ease infinite;
 }
 
-/* Screen reader only */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.animate-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -158,4 +154,40 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+[data-magnetic] {
+  transition: transform 0.2s ease;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
 }

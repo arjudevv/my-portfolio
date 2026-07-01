@@ -1,14 +1,25 @@
 import { notFound } from 'next/navigation';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import CodeBlock from '@/components/CodeBlock';
 import Callout from '@/components/Callout';
 
+export function generateStaticParams() {
+  try {
+    const postsDir = join(process.cwd(), 'src', 'content', 'posts');
+    return readdirSync(postsDir)
+      .filter((f) => f.endsWith('.mdx'))
+      .map((f) => ({ slug: f.replace('.mdx', '') }));
+  } catch {
+    return [{ slug: 'getting-started-with-nextjs' }];
+  }
+}
+
 const components = {
   pre: CodeBlock,
   Callout,
-  code: ({ className, children, ...props }: any) => {
+  code: ({ className, children }: { className?: string; children?: React.ReactNode }) => {
     const match = /language-(\w+)/.exec(className || '');
     return (
       <CodeBlock language={match ? match[1] : undefined}>
@@ -23,7 +34,7 @@ async function getPost(slug: string) {
     const filePath = join(process.cwd(), 'src', 'content', 'posts', `${slug}.mdx`);
     const content = readFileSync(filePath, 'utf-8');
     return content;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

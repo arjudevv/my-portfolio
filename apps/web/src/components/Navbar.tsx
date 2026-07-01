@@ -1,109 +1,136 @@
 'use client';
 
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
+import { Menu, X, Volume2, VolumeX } from 'lucide-react';
+import { sections } from '@/content/site';
+import { useScrollTo } from '@/components/providers/LenisProvider';
+import { useSound } from '@/components/providers/SoundProvider';
+import { cn } from '@/lib/utils';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [projectsOpen, setProjectsOpen] = useState(false);
-  const projectsRef = useRef<HTMLDivElement>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+  const scrollTo = useScrollTo();
+  const { muted, toggleMute } = useSound();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' }
+    );
+
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      observer.disconnect();
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (projectsRef.current && !projectsRef.current.contains(event.target as Node)) {
-        setProjectsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const navItems = sections.filter((s) => s.id !== 'hero');
 
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/contact', label: 'Contact' },
-  ];
+  const handleNav = (id: string) => {
+    scrollTo(`#${id}`);
+    setMobileOpen(false);
+  };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-md'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          <Link href="/" className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Arjun
-          </Link>
-          <div className="flex items-center space-x-4 md:space-x-6">
-            {navLinks.map((link) => (
-              <motion.div key={link.href} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href={link.href}
-                  className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors hidden sm:block"
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-            
-            {/* Projects Dropdown */}
-            <div className="relative hidden sm:block" ref={projectsRef}>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setProjectsOpen(!projectsOpen);
-                }}
-                className="text-sm md:text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors flex items-center gap-1"
-              >
-                Projects {projectsOpen ? '▲' : '▼'}
-              </motion.button>
-              <AnimatePresence>
-                {projectsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full mt-2 right-0 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 min-w-[180px] overflow-hidden"
-                  >
-                    <Link
-                      href="/projects"
-                      className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
-                      onClick={() => setProjectsOpen(false)}
-                    >
-                      All Projects
-                    </Link>
-                    <Link
-                      href="/projects?filter=web"
-                      className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
-                      onClick={() => setProjectsOpen(false)}
-                    >
-                      Web Projects
-                    </Link>
-                  </motion.div>
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, delay: 2.5 }}
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          scrolled ? 'glass py-3' : 'bg-transparent py-5'
+        )}
+        aria-label="Main navigation"
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <button
+            onClick={() => handleNav('hero')}
+            className="text-xl font-heading font-bold text-white"
+            data-magnetic
+          >
+            ARJUN
+          </button>
+
+          <div className="hidden lg:flex items-center gap-1">
+            {navItems.map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => handleNav(id)}
+                className={cn(
+                  'px-3 py-2 text-sm rounded-full transition-colors',
+                  activeSection === id ? 'text-white bg-white/10' : 'text-muted hover:text-white'
                 )}
-              </AnimatePresence>
-            </div>
+                data-magnetic
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-full text-muted hover:text-white hover:bg-white/10 transition-colors"
+              aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+            >
+              {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={() => handleNav('contact')}
+              className="hidden sm:inline-flex px-4 py-2 text-sm font-medium rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
+              data-magnetic
+            >
+              Contact
+            </button>
+            <button
+              className="lg:hidden p-2 text-white"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
-      </div>
-    </motion.nav>
+      </motion.nav>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-x-0 top-16 z-40 glass mx-4 rounded-2xl p-4 lg:hidden"
+          >
+            {navItems.map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => handleNav(id)}
+                className="block w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-xl"
+              >
+                {label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useSyncExternalStore, type ReactNode } from 'react';
 
 interface PolishSettings {
   polishEnabled: boolean;
@@ -29,73 +29,62 @@ const defaultSettings: PolishSettings = {
 
 const PolishContext = createContext<PolishContextType | undefined>(undefined);
 
-export function PolishProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<PolishSettings>(defaultSettings);
-  const [mounted, setMounted] = useState(false);
-
-  // Check for prefers-reduced-motion and device memory on mount
-  useEffect(() => {
-    setMounted(true);
-    
-    // Check prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
-    // Check device memory (if available)
-    const deviceMemory = (navigator as any).deviceMemory || 4;
-    const shouldDisableByDefault = prefersReducedMotion || deviceMemory <= 2;
-
-    // Load from localStorage
-    const stored = localStorage.getItem('polish-settings');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setSettings({
-          ...defaultSettings,
-          ...parsed,
-          // Override if reduced motion is preferred
-          polishEnabled: shouldDisableByDefault ? false : parsed.polishEnabled ?? defaultSettings.polishEnabled,
-        });
-      } catch {
-        setSettings({
-          ...defaultSettings,
-          polishEnabled: shouldDisableByDefault ? false : defaultSettings.polishEnabled,
-        });
-      }
-    } else {
-      setSettings({
+function getInitialSettings(): PolishSettings {
+  if (typeof window === 'undefined') return defaultSettings;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 4;
+  const shouldDisableByDefault = prefersReducedMotion || deviceMemory <= 2;
+  const stored = localStorage.getItem('polish-settings');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored) as Partial<PolishSettings>;
+      return {
         ...defaultSettings,
-        polishEnabled: shouldDisableByDefault ? false : defaultSettings.polishEnabled,
-      });
+        ...parsed,
+        polishEnabled: shouldDisableByDefault ? false : (parsed.polishEnabled ?? defaultSettings.polishEnabled),
+      };
+    } catch {
+      return { ...defaultSettings, polishEnabled: !shouldDisableByDefault };
     }
-  }, []);
+  }
+  return { ...defaultSettings, polishEnabled: !shouldDisableByDefault };
+}
 
-  // Persist to localStorage when settings change
+export function PolishProvider({ children }: { children: ReactNode }) {
+  const [settings, setSettings] = useState<PolishSettings>(() =>
+    typeof window !== 'undefined' ? getInitialSettings() : defaultSettings
+  );
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+
   useEffect(() => {
-    if (mounted) {
-      localStorage.setItem('polish-settings', JSON.stringify(settings));
-    }
+    if (mounted) localStorage.setItem('polish-settings', JSON.stringify(settings));
   }, [settings, mounted]);
 
-  const updateSettings = (updates: Partial<PolishSettings>) => {
-    setSettings((prev) => ({ ...prev, ...updates }));
-  };
+  const update = (partial: Partial<PolishSettings>) =>
+    setSettings((prev) => ({ ...prev, ...partial }));
 
-  const value: PolishContextType = {
-    settings,
-    setPolishEnabled: (enabled) => updateSettings({ polishEnabled: enabled }),
-    setAudioReactive: (enabled) => updateSettings({ audioReactive: enabled }),
-    setLowQualityMode: (enabled) => updateSettings({ lowQualityMode: enabled }),
-    setBloomIntensity: (intensity) => updateSettings({ bloomIntensity: intensity }),
-    setSheenStrength: (strength) => updateSettings({ sheenStrength: strength }),
-  };
-
-  return <PolishContext.Provider value={value}>{children}</PolishContext.Provider>;
+  return (
+    <PolishContext.Provider
+      value={{
+        settings,
+        setPolishEnabled: (enabled) => update({ polishEnabled: enabled }),
+        setAudioReactive: (enabled) => update({ audioReactive: enabled }),
+        setLowQualityMode: (enabled) => update({ lowQualityMode: enabled }),
+        setBloomIntensity: (intensity) => update({ bloomIntensity: intensity }),
+        setSheenStrength: (strength) => update({ sheenStrength: strength }),
+      }}
+    >
+      {children}
+    </PolishContext.Provider>
+  );
 }
 
 export function usePolish() {
   const context = useContext(PolishContext);
-  if (context === undefined) {
-    throw new Error('usePolish must be used within a PolishProvider');
-  }
+  if (!context) throw new Error('usePolish must be used within PolishProvider');
   return context;
 }

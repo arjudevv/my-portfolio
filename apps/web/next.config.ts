@@ -1,31 +1,21 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
+  output: 'export',
   reactCompiler: true,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
   },
-  // Performance optimizations
   experimental: {
     optimizePackageImports: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing'],
   },
-  // Webpack configuration for GLSL shaders
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.module.rules.push({
-        test: /\.(glsl|vs|fs|vert|frag)$/,
-        use: ['raw-loader'],
-      });
-    }
-    return config;
-  },
+  trailingSlash: true,
 };
 
-const withMDX = createMDX({
-  // Add markdown plugins here, as desired
-});
+const withMDX = createMDX({});
 
 export default withMDX(nextConfig);
