@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 
@@ -12,67 +12,81 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
   const [exiting, setExiting] = useState(false);
 
-  const preload = useCallback(async () => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      onComplete();
-      return;
-    }
-
-    const skip = sessionStorage.getItem('intro-seen');
-    if (skip) {
-      onComplete();
-      return;
-    }
-
-    const assets = [
-      '/assets/noise.png',
-      '/models/face-model.glb',
-    ];
-
-    let loaded = 0;
-    const total = assets.length + 2;
-
-    const tick = () => {
-      loaded++;
-      setProgress(Math.min(100, Math.round((loaded / total) * 100)));
-    };
-
-    await new Promise((r) => setTimeout(r, 400));
-    tick();
-
-    await Promise.all(
-      assets.map(
-        (src) =>
-          new Promise<void>((resolve) => {
-            if (src.endsWith('.glb')) {
-              fetch(src).then(() => { tick(); resolve(); }).catch(() => { tick(); resolve(); });
-            } else {
-              const img = new Image();
-              img.onload = () => { tick(); resolve(); };
-              img.onerror = () => { tick(); resolve(); };
-              img.src = src;
-            }
-          })
-      )
-    );
-
-    tick();
-    await new Promise((r) => setTimeout(r, 300));
-    tick();
-
-    setProgress(100);
-    await new Promise((r) => setTimeout(r, 400));
-    setExiting(true);
-    sessionStorage.setItem('intro-seen', 'true');
-
-    await new Promise((r) => setTimeout(r, 800));
-    onComplete();
-  }, [onComplete]);
-
   useEffect(() => {
-    preload();
-  }, [preload]);
+    let cancelled = false;
+
+    async function runPreload() {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const skip = sessionStorage.getItem('intro-seen');
+
+      if (reducedMotion || skip) {
+        onComplete();
+        return;
+      }
+
+      const assets = ['/assets/noise.png', '/models/face-model.glb'];
+      let loaded = 0;
+      const total = assets.length + 2;
+
+      const tick = () => {
+        if (cancelled) return;
+        loaded++;
+        setProgress(Math.min(100, Math.round((loaded / total) * 100)));
+      };
+
+      await new Promise((r) => setTimeout(r, 400));
+      tick();
+
+      await Promise.all(
+        assets.map(
+          (src) =>
+            new Promise<void>((resolve) => {
+              if (src.endsWith('.glb')) {
+                fetch(src)
+                  .then(() => {
+                    tick();
+                    resolve();
+                  })
+                  .catch(() => {
+                    tick();
+                    resolve();
+                  });
+              } else {
+                const img = new Image();
+                img.onload = () => {
+                  tick();
+                  resolve();
+                };
+                img.onerror = () => {
+                  tick();
+                  resolve();
+                };
+                img.src = src;
+              }
+            })
+        )
+      );
+
+      tick();
+      await new Promise((r) => setTimeout(r, 300));
+      tick();
+
+      if (cancelled) return;
+      setProgress(100);
+      await new Promise((r) => setTimeout(r, 400));
+      setExiting(true);
+      sessionStorage.setItem('intro-seen', 'true');
+
+      await new Promise((r) => setTimeout(r, 800));
+      if (!cancelled) onComplete();
+    }
+
+    void runPreload();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [onComplete]);
 
   useEffect(() => {
     if (!exiting) return;

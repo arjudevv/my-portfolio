@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@react-three/fiber', '@react-three/drei', '@react-three/postprocessing'],
   },
+  turbopack: {
+    root: '../..',
+  },
   trailingSlash: true,
 };
 
