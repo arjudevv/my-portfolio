@@ -9,7 +9,13 @@ Award-winning interactive portfolio built with Next.js, React Three Fiber, GSAP,
 - **3D:** React Three Fiber, Three.js, Postprocessing, Spline
 - **Animation:** Framer Motion, GSAP, Lenis, Motion One
 - **UI:** Shadcn-style components, Lucide Icons
-- **Deployment:** Firebase Hosting (static export)
+- **Deployment:** GitHub Pages, Firebase Hosting (static export)
+
+## Live Site
+
+**GitHub Pages:** [https://arjudevv.github.io/my-portfolio/](https://arjudevv.github.io/my-portfolio/)
+
+Deployed automatically on every push to `main` via GitHub Actions.
 
 ## Getting Started
 
@@ -54,6 +60,18 @@ src/
 ```env
 NEXT_PUBLIC_SITE_URL=https://arjun.dev
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX   # Optional Google Analytics
+```
+
+## GitHub Pages Deployment
+
+The site deploys automatically when you push to `main`. The workflow is at `.github/workflows/deploy-github-pages.yml`.
+
+**Live URL:** https://arjudevv.github.io/my-portfolio/
+
+To build locally for GitHub Pages:
+
+```bash
+GITHUB_PAGES=true NEXT_PUBLIC_SITE_URL=https://arjudevv.github.io/my-portfolio npm run build
 ```
 
 ## Firebase Hosting Deployment
