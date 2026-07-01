@@ -7,7 +7,6 @@ import { featuredProjectConfig } from '@/content/featured-project';
 
 const Spline = dynamic(() => import('@splinetool/react-spline'), {
   ssr: false,
-  loading: () => <PhoneFallback />,
 });
 
 function PhoneFallback() {
@@ -26,6 +25,7 @@ function PhoneFallback() {
 export default function FeaturedProjectSection() {
   const [activeScreen, setActiveScreen] = useState(0);
   const [splineError, setSplineError] = useState(false);
+  const [splineReady, setSplineReady] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -45,6 +45,8 @@ export default function FeaturedProjectSection() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const showFallback = splineError || !splineReady;
 
   return (
     <section
@@ -67,14 +69,16 @@ export default function FeaturedProjectSection() {
               <p className="text-body-lg text-muted">{featuredProject.longDescription}</p>
               <div className="flex flex-wrap gap-2">
                 {featuredProject.tech.map((t) => (
-                  <span key={t} className="px-3 py-1 rounded-full text-sm glass">{t}</span>
+                  <span key={t} className="px-3 py-1 rounded-full text-sm glass">
+                    {t}
+                  </span>
                 ))}
               </div>
               <div className="flex gap-3">
                 {featuredProjectConfig.screens.map((screen, i) => (
                   <div
                     key={screen.id}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 transition-opacity duration-300"
                     style={{ opacity: activeScreen === i ? 1 : 0.4 }}
                   >
                     <div className="w-3 h-3 rounded-full" style={{ background: screen.color }} />
@@ -85,14 +89,24 @@ export default function FeaturedProjectSection() {
             </div>
 
             <div className="h-[400px] md:h-[500px] relative" data-phone>
-              {!splineError ? (
-                <Spline
-                  scene={featuredProjectConfig.splineSceneUrl}
-                  className="w-full h-full"
-                  onError={() => setSplineError(true)}
-                />
-              ) : (
+              <div
+                className="absolute inset-0 transition-opacity duration-500"
+                style={{ opacity: showFallback ? 1 : 0, pointerEvents: showFallback ? 'auto' : 'none' }}
+              >
                 <PhoneFallback />
+              </div>
+              {!splineError && (
+                <div
+                  className="absolute inset-0 transition-opacity duration-500"
+                  style={{ opacity: splineReady ? 1 : 0 }}
+                >
+                  <Spline
+                    scene={featuredProjectConfig.splineSceneUrl}
+                    className="w-full h-full"
+                    onLoad={() => setSplineReady(true)}
+                    onError={() => setSplineError(true)}
+                  />
+                </div>
               )}
             </div>
           </div>

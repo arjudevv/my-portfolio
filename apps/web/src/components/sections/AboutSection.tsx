@@ -10,26 +10,37 @@ import { Card, CardContent } from '@/components/ui/card';
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  enabled?: boolean;
+}
+
+export default function AboutSection({ enabled = false }: AboutSectionProps) {
   const countersRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!countersRef.current) return;
+    if (!enabled || !countersRef.current) return;
     const els = countersRef.current.querySelectorAll('[data-count]');
-    els.forEach((el) => {
+    const triggers = Array.from(els).map((el) => {
       const target = parseInt(el.getAttribute('data-count') ?? '0', 10);
       const obj = { val: 0 };
-      gsap.to(obj, {
+      const tween = gsap.to(obj, {
         val: target,
         duration: 2,
         ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 85%' },
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
         onUpdate: () => {
           el.textContent = Math.round(obj.val).toLocaleString() + (el.getAttribute('data-suffix') ?? '');
         },
       });
+      return tween.scrollTrigger;
     });
-  }, []);
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      triggers.forEach((trigger) => trigger?.kill());
+    };
+  }, [enabled]);
 
   const topSkills = skills.slice(0, 8);
 

@@ -47,20 +47,23 @@ export function initScrollStory(
       },
     });
 
+    if (id === 'hero') return;
+
     const content = el.querySelector('[data-reveal]');
     if (content) {
       gsap.fromTo(
         content,
-        { opacity: 0, y: 60 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 75%',
-            toggleActions: 'play none none reverse',
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+            once: true,
           },
         }
       );
@@ -83,24 +86,28 @@ export function initScrollStory(
       });
     }
   }
+
+  ScrollTrigger.refresh();
 }
 
 export function useScrollStory(
   onSceneChange: (scene: SceneId) => void,
-  onSectionEnter?: (id: string) => void
+  onSectionEnter?: (id: string) => void,
+  enabled = false
 ) {
   useEffect(() => {
+    if (!enabled) return;
+
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) return;
 
-    const timer = setTimeout(() => {
+    const frame = requestAnimationFrame(() => {
       initScrollStory(onSceneChange, onSectionEnter);
-      ScrollTrigger.refresh();
-    }, 3000);
+    });
 
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(frame);
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, [onSceneChange, onSectionEnter]);
+  }, [enabled, onSceneChange, onSectionEnter]);
 }

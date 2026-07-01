@@ -8,7 +8,11 @@ import { useScrollTo } from '@/components/providers/LenisProvider';
 import { useSound } from '@/components/providers/SoundProvider';
 import { cn } from '@/lib/utils';
 
-export default function Navbar() {
+interface NavbarProps {
+  visible?: boolean;
+}
+
+export default function Navbar({ visible = true }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -48,12 +52,14 @@ export default function Navbar() {
     setMobileOpen(false);
   };
 
+  if (!visible) return null;
+
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, delay: 2.5 }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
           scrolled ? 'glass py-3' : 'bg-transparent py-5'

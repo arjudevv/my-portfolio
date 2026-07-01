@@ -18,45 +18,60 @@ import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import FooterSection from '@/components/sections/FooterSection';
 import type { SceneId } from '@/types/portfolio';
+import { cn } from '@/lib/utils';
 
-function PortfolioContent() {
+function PortfolioContent({
+  loaded,
+  onLoaded,
+}: {
+  loaded: boolean;
+  onLoaded: () => void;
+}) {
   const { setActiveScene } = useScene();
-  const [loaded, setLoaded] = useState(false);
 
   const onSceneChange = useCallback(
     (scene: SceneId) => setActiveScene(scene),
     [setActiveScene]
   );
 
-  useScrollStory(onSceneChange);
+  useScrollStory(onSceneChange, undefined, loaded);
 
   return (
     <>
-      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
-      <a href="#hero" className="skip-link">Skip to content</a>
-      <Navbar />
-      <main id="main-content">
-        <HeroSection />
-        <AboutSection />
-        <ExperienceSection />
-        <SkillsSection />
-        <FeaturedProjectSection />
-        <ProjectsSection />
-        <TechGalaxySection />
-        <AchievementsSection />
-        <TestimonialsSection />
-        <ContactSection />
-      </main>
-      <FooterSection />
+      {!loaded && <LoadingScreen onComplete={onLoaded} />}
+      <div
+        className={cn('transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0 pointer-events-none')}
+        aria-hidden={!loaded}
+      >
+        <a href="#hero" className="skip-link">
+          Skip to content
+        </a>
+        <Navbar visible={loaded} />
+        <main id="main-content">
+          <HeroSection introComplete={loaded} />
+          <AboutSection enabled={loaded} />
+          <ExperienceSection />
+          <SkillsSection />
+          <FeaturedProjectSection />
+          <ProjectsSection />
+          <TechGalaxySection />
+          <AchievementsSection enabled={loaded} />
+          <TestimonialsSection />
+          <ContactSection />
+        </main>
+        <FooterSection />
+      </div>
     </>
   );
 }
 
 export default function HomePage() {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <SceneProvider>
-      <SceneManager />
-      <PortfolioContent />
+      <SceneManager enabled={loaded} />
+      <PortfolioContent loaded={loaded} onLoaded={() => setLoaded(true)} />
     </SceneProvider>
   );
 }

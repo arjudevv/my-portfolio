@@ -8,14 +8,18 @@ import { Button } from '@/components/ui/button';
 import { useScrollTo } from '@/components/providers/LenisProvider';
 import { useRipple } from '@/hooks/useRipple';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  introComplete?: boolean;
+}
+
+export default function HeroSection({ introComplete = false }: HeroSectionProps) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const scrollTo = useScrollTo();
   const createRipple = useRipple();
 
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion || !titleRef.current) return;
+    if (!introComplete || reducedMotion || !titleRef.current) return;
 
     const chars = titleRef.current.querySelectorAll('[data-char]');
     gsap.fromTo(
@@ -26,11 +30,10 @@ export default function HeroSection() {
         y: 0,
         duration: 0.6,
         stagger: 0.05,
-        delay: 2.8,
         ease: 'power3.out',
       }
     );
-  }, []);
+  }, [introComplete]);
 
   const name = site.name.toUpperCase();
 
@@ -41,7 +44,7 @@ export default function HeroSection() {
       className="relative min-h-screen flex items-center section-padding"
       aria-labelledby="hero-heading"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <p className="section-label">Portfolio 2026</p>

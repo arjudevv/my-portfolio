@@ -7,27 +7,38 @@ import { achievements, timeline } from '@/content/achievements';
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
-export default function AchievementsSection() {
+interface AchievementsSectionProps {
+  enabled?: boolean;
+}
+
+export default function AchievementsSection({ enabled = false }: AchievementsSectionProps) {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!gridRef.current) return;
-    gridRef.current.querySelectorAll('[data-achievement]').forEach((el) => {
+    if (!enabled || !gridRef.current) return;
+    const triggers = Array.from(gridRef.current.querySelectorAll('[data-achievement]')).map((el) => {
       const target = parseInt(el.getAttribute('data-value') ?? '0', 10);
       const suffix = el.getAttribute('data-suffix') ?? '';
       const obj = { val: 0 };
-      gsap.to(obj, {
+      const tween = gsap.to(obj, {
         val: target,
         duration: 2.5,
         ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 85%' },
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
         onUpdate: () => {
           const display = target >= 1000 ? Math.round(obj.val).toLocaleString() : Math.round(obj.val);
           el.textContent = `${el.getAttribute('data-prefix') ?? ''}${display}${suffix}`;
         },
       });
+      return tween.scrollTrigger;
     });
-  }, []);
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      triggers.forEach((trigger) => trigger?.kill());
+    };
+  }, [enabled]);
 
   return (
     <section id="achievements" data-section="achievements" className="section-padding relative" aria-labelledby="achievements-heading">

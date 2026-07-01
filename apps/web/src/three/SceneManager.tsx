@@ -19,13 +19,17 @@ function useWebGLSupport() {
   );
 }
 
-export default function SceneManager() {
+interface SceneManagerProps {
+  enabled?: boolean;
+}
+
+export default function SceneManager({ enabled = false }: SceneManagerProps) {
   const isClient = useIsClient();
   const hasWebGL = useWebGLSupport();
   const { setMouse } = useScene();
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !enabled) return;
     const onMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -33,9 +37,9 @@ export default function SceneManager() {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
-  }, [isClient, setMouse]);
+  }, [isClient, enabled, setMouse]);
 
-  if (!isClient) {
+  if (!isClient || !enabled) {
     return <div className="fixed inset-0 -z-10 bg-gradient-to-br from-background via-surface to-background" />;
   }
 

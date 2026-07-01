@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { gsap } from 'gsap';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -10,7 +9,14 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [exiting, setExiting] = useState(false);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -20,7 +26,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       const skip = sessionStorage.getItem('intro-seen');
 
       if (reducedMotion || skip) {
-        onComplete();
+        setVisible(false);
         return;
       }
 
@@ -74,11 +80,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       if (cancelled) return;
       setProgress(100);
       await new Promise((r) => setTimeout(r, 400));
-      setExiting(true);
       sessionStorage.setItem('intro-seen', 'true');
 
-      await new Promise((r) => setTimeout(r, 800));
-      if (!cancelled) onComplete();
+      if (!cancelled) setVisible(false);
     }
 
     void runPreload();
@@ -86,20 +90,21 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     return () => {
       cancelled = true;
     };
-  }, [onComplete]);
+  }, []);
 
-  useEffect(() => {
-    if (!exiting) return;
-    gsap.to('.loader-content', { scale: 1.2, opacity: 0, duration: 0.6, ease: 'power2.in' });
-  }, [exiting]);
+  const handleExitComplete = () => {
+    document.body.style.overflow = '';
+    onComplete();
+  };
 
   return (
-    <AnimatePresence>
-      {!exiting && (
+    <AnimatePresence onExitComplete={handleExitComplete}>
+      {visible && (
         <motion.div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <div
             className="absolute inset-0 opacity-30"
@@ -107,7 +112,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               background: 'radial-gradient(ellipse at center, rgba(91,140,255,0.3) 0%, transparent 70%)',
             }}
           />
-          <div className="loader-content relative z-10 text-center">
+          <div className="relative z-10 text-center">
             <motion.h1
               className="text-display font-heading font-bold gradient-text mb-8"
               initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}

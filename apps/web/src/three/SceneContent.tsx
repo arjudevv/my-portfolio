@@ -1,12 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 import { useScene } from './SceneContext';
 import PostFX from './PostFX';
 import { usePrefersReducedMotion } from '@/hooks/useIsClient';
+import type { SceneId } from '@/types/portfolio';
 
 const PARTICLE_POSITIONS = Array.from({ length: 80 }, (_, i) => ({
   x: Math.sin(i * 1.7) * 6,
@@ -25,6 +26,37 @@ const GALAXY_POSITIONS = Array.from({ length: 30 }, (_, i) => {
     hue: i % 3 === 0 ? '#5B8CFF' : i % 3 === 1 ? '#8A5CFF' : '#00E5FF',
   };
 });
+
+function SceneLayer({
+  active,
+  children,
+}: {
+  active: boolean;
+  children: ReactNode;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const opacity = useRef(active ? 1 : 0);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    const target = active ? 1 : 0;
+    opacity.current = THREE.MathUtils.damp(opacity.current, target, 6, delta);
+    groupRef.current.visible = opacity.current > 0.02;
+    groupRef.current.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.material) return;
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      materials.forEach((material) => {
+        if ('opacity' in material) {
+          material.transparent = true;
+          material.opacity = opacity.current;
+        }
+      });
+    });
+  });
+
+  return <group ref={groupRef}>{children}</group>;
+}
 
 function FloatingOrbs() {
   const groupRef = useRef<THREE.Group>(null);
@@ -148,6 +180,14 @@ function CloudInfra() {
   );
 }
 
+function isOrbsScene(scene: SceneId) {
+  return scene === 'hero' || scene === 'about';
+}
+
+function isNetworkScene(scene: SceneId) {
+  return scene === 'projects' || scene === 'experience';
+}
+
 export default function SceneContent() {
   const { activeScene, mouse } = useScene();
   const lightRef = useRef<THREE.PointLight>(null);
@@ -167,11 +207,21 @@ export default function SceneContent() {
       <pointLight ref={lightRef} position={[5, 5, 5]} intensity={1} color="#5B8CFF" />
       <pointLight position={[-5, -3, -5]} intensity={0.4} color="#8A5CFF" />
 
-      {(activeScene === 'hero' || activeScene === 'about') && <FloatingOrbs />}
-      {activeScene === 'skills' && <CodeParticles />}
-      {(activeScene === 'projects' || activeScene === 'experience') && <NetworkNodes />}
-      {activeScene === 'galaxy' && <GalaxyNodes />}
-      {activeScene === 'contact' && <CloudInfra />}
+      <SceneLayer active={isOrbsScene(activeScene)}>
+        <FloatingOrbs />
+      </SceneLayer>
+      <SceneLayer active={activeScene === 'skills'}>
+        <CodeParticles />
+      </SceneLayer>
+      <SceneLayer active={isNetworkScene(activeScene)}>
+        <NetworkNodes />
+      </SceneLayer>
+      <SceneLayer active={activeScene === 'galaxy'}>
+        <GalaxyNodes />
+      </SceneLayer>
+      <SceneLayer active={activeScene === 'contact'}>
+        <CloudInfra />
+      </SceneLayer>
 
       {!reducedMotion && <PostFX />}
     </>
