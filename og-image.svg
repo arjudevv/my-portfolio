@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#050505"/>
+      <stop offset="100%" style="stop-color:#101010"/>
+    </linearGradient>
+    <linearGradient id="text" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5B8CFF"/>
+      <stop offset="50%" style="stop-color:#8A5CFF"/>
+      <stop offset="100%" style="stop-color:#00E5FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="900" cy="315" r="200" fill="#5B8CFF" opacity="0.1"/>
+  <circle cx="1000" cy="200" r="120" fill="#8A5CFF" opacity="0.15"/>
+  <text x="80" y="280" fill="url(#text)" font-family="sans-serif" font-size="96" font-weight="bold">ARJUN</text>
+  <text x="80" y="360" fill="#AAAAAA" font-family="sans-serif" font-size="36">Senior Android Developer</text>
+  <text x="80" y="420" fill="#5B8CFF" font-family="sans-serif" font-size="24">Kotlin · Compose · Firebase · AWS</text>
+</svg>
