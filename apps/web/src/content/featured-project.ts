@@ -1,9 +1,8 @@
 export const featuredProjectConfig = {
-  splineSceneUrl: 'https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode',
-  scrollHeight: '300vh',
+  scrollHeight: 'auto',
   screens: [
-    { id: 'dashboard', label: 'Dashboard', color: '#5B8CFF' },
-    { id: 'payments', label: 'Payments', color: '#8A5CFF' },
-    { id: 'analytics', label: 'Analytics', color: '#00E5FF' },
+    { id: 'dashboard', label: 'Dashboard', color: '#c8c8c4' },
+    { id: 'payments', label: 'Payments', color: '#a3a3a0' },
+    { id: 'analytics', label: 'Analytics', color: '#8a8a86' },
   ],
 } as const;

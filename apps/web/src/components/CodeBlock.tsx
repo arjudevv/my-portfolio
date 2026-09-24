@@ -14,15 +14,15 @@ export default function CodeBlock({ language, children }: CodeBlockProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="my-6 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800"
+      className="my-6 overflow-hidden border border-white/12"
     >
       {language && (
-        <div className="bg-zinc-100 dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="bg-surface px-4 py-2 text-sm font-medium text-muted border-b border-white/12">
           {language}
         </div>
       )}
-      <pre className="bg-zinc-900 dark:bg-zinc-950 p-4 overflow-x-auto">
-        <code className="text-sm text-zinc-100 font-mono">{children}</code>
+      <pre className="bg-background p-4 overflow-x-auto">
+        <code className="text-sm text-text font-mono">{children}</code>
       </pre>
     </motion.div>
   );

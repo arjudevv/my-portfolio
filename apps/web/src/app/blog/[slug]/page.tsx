@@ -52,9 +52,9 @@ export default async function BlogPostPage({
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 pt-20 md:pt-32 pb-16 md:pb-24">
+    <div className="min-h-screen bg-background pt-20 md:pt-32 pb-16 md:pb-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <article className="max-w-4xl mx-auto prose prose-lg dark:prose-invert prose-zinc dark:prose-zinc max-w-none">
+        <article className="max-w-3xl mx-auto prose prose-invert prose-neutral max-w-none text-muted prose-headings:font-heading prose-headings:text-text prose-a:text-text prose-strong:text-text">
           <MDXRemote source={content} components={components} />
         </article>
       </div>

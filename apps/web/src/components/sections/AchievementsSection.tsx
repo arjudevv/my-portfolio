@@ -44,15 +44,15 @@ export default function AchievementsSection({ enabled = false }: AchievementsSec
     <section id="achievements" data-section="achievements" className="section-padding relative" aria-labelledby="achievements-heading">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <p className="section-label mb-4">Achievements</p>
-        <h2 id="achievements-heading" className="text-4xl md:text-6xl font-heading font-bold mb-16">
-          Impact & <span className="gradient-text">Milestones</span>
+        <h2 id="achievements-heading" className="text-4xl md:text-6xl font-heading font-bold mb-16 text-text">
+          Impact &amp; Milestones
         </h2>
 
         <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {achievements.map((a) => (
-            <div key={a.id} className="card-glass rounded-2xl p-8 text-center">
+            <div key={a.id} className="border border-white/12 bg-surface p-8 text-center">
               <p
-                className="text-4xl md:text-5xl font-heading font-bold gradient-text"
+                className="text-4xl md:text-5xl font-heading font-bold text-text"
                 data-achievement
                 data-value={a.value}
                 data-suffix={a.suffix ?? ''}
@@ -68,9 +68,9 @@ export default function AchievementsSection({ enabled = false }: AchievementsSec
         <div className="relative overflow-x-auto pb-4">
           <div className="flex gap-6 min-w-max">
             {timeline.map((item, i) => (
-              <div key={i} className="card-glass rounded-2xl p-6 w-64 shrink-0">
-                <p className="text-accent font-mono text-sm mb-2">{item.year}</p>
-                <h3 className="font-heading font-semibold text-white">{item.title}</h3>
+              <div key={i} className="border border-white/12 bg-surface p-6 w-64 shrink-0">
+                <p className="text-muted font-mono text-sm mb-2">{item.year}</p>
+                <h3 className="font-heading font-semibold text-text">{item.title}</h3>
                 <p className="text-sm text-muted">{item.subtitle}</p>
               </div>
             ))}

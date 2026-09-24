@@ -61,15 +61,15 @@ export default function Navbar({ visible = true }: NavbarProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-          scrolled ? 'glass py-3' : 'bg-transparent py-5'
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          scrolled ? 'border-b border-white/10 bg-background/90 backdrop-blur-md py-3' : 'bg-transparent py-5'
         )}
         aria-label="Main navigation"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <button
             onClick={() => handleNav('hero')}
-            className="text-xl font-heading font-bold text-white"
+            className="text-xl font-heading font-bold text-text tracking-tight"
             data-magnetic
           >
             ARJUN
@@ -81,8 +81,8 @@ export default function Navbar({ visible = true }: NavbarProps) {
                 key={id}
                 onClick={() => handleNav(id)}
                 className={cn(
-                  'px-3 py-2 text-sm rounded-full transition-colors',
-                  activeSection === id ? 'text-white bg-white/10' : 'text-muted hover:text-white'
+                  'px-3 py-2 text-sm transition-colors',
+                  activeSection === id ? 'text-text border-b border-text' : 'text-muted hover:text-text'
                 )}
                 data-magnetic
               >
@@ -94,20 +94,20 @@ export default function Navbar({ visible = true }: NavbarProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleMute}
-              className="p-2 rounded-full text-muted hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 text-muted hover:text-text transition-colors"
               aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
             >
               {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
             <button
               onClick={() => handleNav('contact')}
-              className="hidden sm:inline-flex px-4 py-2 text-sm font-medium rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
+              className="hidden sm:inline-flex px-4 py-2 text-sm font-medium bg-text text-background hover:bg-text/90 transition-colors"
               data-magnetic
             >
               Contact
             </button>
             <button
-              className="lg:hidden p-2 text-white"
+              className="lg:hidden p-2 text-text"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
             >
@@ -120,16 +120,16 @@ export default function Navbar({ visible = true }: NavbarProps) {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-16 z-40 glass mx-4 rounded-2xl p-4 lg:hidden"
+            exit={{ opacity: 0, y: -12 }}
+            className="fixed inset-x-0 top-16 z-40 border border-white/12 bg-background mx-4 p-4 lg:hidden"
           >
             {navItems.map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => handleNav(id)}
-                className="block w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-xl"
+                className="block w-full text-left px-4 py-3 text-text hover:bg-white/5"
               >
                 {label}
               </button>

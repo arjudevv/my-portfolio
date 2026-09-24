@@ -1,114 +1,64 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { featuredProject } from '@/content/projects';
 import { featuredProjectConfig } from '@/content/featured-project';
-
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
-  ssr: false,
-});
-
-function PhoneFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="w-48 h-96 rounded-[2rem] border-4 border-white/20 bg-surface shadow-glass relative overflow-hidden">
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-white/20 rounded-full" />
-        <div className="absolute inset-4 top-8 rounded-2xl bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center">
-          <span className="text-4xl">📱</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { Button } from '@/components/ui/button';
 
 export default function FeaturedProjectSection() {
-  const [activeScreen, setActiveScreen] = useState(0);
-  const [splineError, setSplineError] = useState(false);
-  const [splineReady, setSplineReady] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, -rect.top / (rect.height - window.innerHeight)));
-      const screenIndex = Math.min(
-        featuredProjectConfig.screens.length - 1,
-        Math.floor(progress * featuredProjectConfig.screens.length)
-      );
-      setActiveScreen(screenIndex);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const showFallback = splineError || !splineReady;
-
   return (
     <section
       id="featured"
-      ref={sectionRef}
       data-section="featured"
-      className="relative"
-      style={{ minHeight: featuredProjectConfig.scrollHeight }}
+      className="section-padding relative"
       aria-labelledby="featured-heading"
     >
-      <div className="sticky top-0 h-screen flex items-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
-          <p className="section-label mb-4">Featured Project</p>
-          <h2 id="featured-heading" className="text-4xl md:text-6xl font-heading font-bold mb-8">
-            {featuredProject.title}
-          </h2>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
+        <p className="section-label mb-4">Featured Project</p>
+        <h2 id="featured-heading" className="text-4xl md:text-6xl font-heading font-bold mb-10 text-text">
+          {featuredProject.title}
+        </h2>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <p className="text-body-lg text-muted">{featuredProject.longDescription}</p>
-              <div className="flex flex-wrap gap-2">
-                {featuredProject.tech.map((t) => (
-                  <span key={t} className="px-3 py-1 rounded-full text-sm glass">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-3">
-                {featuredProjectConfig.screens.map((screen, i) => (
-                  <div
-                    key={screen.id}
-                    className="flex items-center gap-2 transition-opacity duration-300"
-                    style={{ opacity: activeScreen === i ? 1 : 0.4 }}
-                  >
-                    <div className="w-3 h-3 rounded-full" style={{ background: screen.color }} />
-                    <span className="text-sm text-muted">{screen.label}</span>
-                  </div>
-                ))}
-              </div>
+        <div className="grid lg:grid-cols-2 gap-12 items-start border-t border-white/10 pt-10">
+          <div className="space-y-6">
+            <p className="text-body-lg text-muted">{featuredProject.longDescription}</p>
+            <div className="flex flex-wrap gap-2">
+              {featuredProject.tech.map((t) => (
+                <span key={t} className="px-3 py-1 text-sm border border-white/15 text-muted">
+                  {t}
+                </span>
+              ))}
             </div>
-
-            <div className="h-[400px] md:h-[500px] relative" data-phone>
-              <div
-                className="absolute inset-0 transition-opacity duration-500"
-                style={{ opacity: showFallback ? 1 : 0, pointerEvents: showFallback ? 'auto' : 'none' }}
-              >
-                <PhoneFallback />
-              </div>
-              {!splineError && (
-                <div
-                  className="absolute inset-0 transition-opacity duration-500"
-                  style={{ opacity: splineReady ? 1 : 0 }}
-                >
-                  <Spline
-                    scene={featuredProjectConfig.splineSceneUrl}
-                    className="w-full h-full"
-                    onLoad={() => setSplineReady(true)}
-                    onError={() => setSplineError(true)}
-                  />
-                </div>
+            <ul className="space-y-3">
+              {featuredProjectConfig.screens.map((screen) => (
+                <li key={screen.id} className="flex items-center gap-3 text-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-text/70" aria-hidden />
+                  <span className="text-sm tracking-wide">{screen.label}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button asChild>
+                <Link href={`/projects/${featuredProject.id}`}>Full Case Study</Link>
+              </Button>
+              {featuredProject.github && (
+                <Button variant="outline" asChild>
+                  <a href={featuredProject.github} target="_blank" rel="noopener noreferrer">
+                    Source
+                  </a>
+                </Button>
               )}
             </div>
+          </div>
+
+          <div className="border border-white/12 bg-surface p-8 md:p-10 min-h-[280px] flex flex-col justify-between">
+            <div>
+              <p className="section-label mb-4">Highlight</p>
+              <p className="text-xl md:text-2xl font-heading text-text leading-snug">
+                {featuredProject.description}
+              </p>
+            </div>
+            <p className="text-sm text-muted mt-8 border-t border-white/10 pt-6">
+              {featuredProject.tags.join(' · ')}
+            </p>
           </div>
         </div>
       </div>
