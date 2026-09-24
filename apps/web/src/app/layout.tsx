@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Inter } from 'next/font/google';
+import { Space_Grotesk, DM_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
@@ -12,10 +12,10 @@ const spaceGrotesk = Space_Grotesk({
   weight: ['400', '500', '600', '700'],
 });
 
-const inter = Inter({
+const dmSans = DM_Sans({
   variable: '--font-body',
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-background text-text`}>
+      <body className={`${spaceGrotesk.variable} ${dmSans.variable} antialiased bg-background text-text`}>
         <AppProviders>{children}</AppProviders>
         <Analytics />
         {gaId && (

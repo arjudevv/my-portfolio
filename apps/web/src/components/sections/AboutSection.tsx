@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { site } from '@/content/site';
 import { stats } from '@/content/achievements';
 import { skills } from '@/content/skills';
-import { Card, CardContent } from '@/components/ui/card';
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
@@ -48,27 +47,27 @@ export default function AboutSection({ enabled = false }: AboutSectionProps) {
     <section id="about" data-section="about" className="section-padding relative" aria-labelledby="about-heading">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <p className="section-label mb-4">About</p>
-        <h2 id="about-heading" className="text-4xl md:text-6xl font-heading font-bold mb-12">
-          Crafting <span className="gradient-text">Digital</span> Experiences
+        <h2 id="about-heading" className="text-4xl md:text-6xl font-heading font-bold mb-12 text-text">
+          Crafting Digital Experiences
         </h2>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          <Card className="card-glass">
-            <CardContent className="p-8 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-heading font-bold">
-                  A
-                </div>
-                <div>
-                  <h3 className="text-xl font-heading font-semibold">{site.name}</h3>
-                  <p className="text-muted">{site.role}</p>
-                </div>
+          <div className="border border-white/12 bg-surface p-8 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 border border-white/20 flex items-center justify-center text-xl font-heading font-bold text-text">
+                A
               </div>
-              {site.about.map((p, i) => (
-                <p key={i} className="text-body-lg text-muted leading-relaxed">{p}</p>
-              ))}
-            </CardContent>
-          </Card>
+              <div>
+                <h3 className="text-xl font-heading font-semibold text-text">{site.name}</h3>
+                <p className="text-muted">{site.role}</p>
+              </div>
+            </div>
+            {site.about.map((p, i) => (
+              <p key={i} className="text-body-lg text-muted leading-relaxed">
+                {p}
+              </p>
+            ))}
+          </div>
 
           <div className="space-y-8">
             <div ref={countersRef} className="grid grid-cols-2 gap-4">
@@ -78,8 +77,8 @@ export default function AboutSection({ enabled = false }: AboutSectionProps) {
                 { label: 'Users', count: stats.usersReached, suffix: '+' },
                 { label: 'Certs', count: stats.certifications, suffix: '' },
               ].map((s) => (
-                <div key={s.label} className="card-glass rounded-2xl p-6 text-center">
-                  <p className="text-3xl font-heading font-bold gradient-text" data-count={s.count} data-suffix={s.suffix}>
+                <div key={s.label} className="border border-white/12 bg-surface p-6 text-center">
+                  <p className="text-3xl font-heading font-bold text-text" data-count={s.count} data-suffix={s.suffix}>
                     0
                   </p>
                   <p className="text-sm text-muted mt-1">{s.label}</p>
@@ -87,11 +86,10 @@ export default function AboutSection({ enabled = false }: AboutSectionProps) {
               ))}
             </div>
             <div className="flex flex-wrap gap-2">
-              {topSkills.map((skill, index) => (
+              {topSkills.map((skill) => (
                 <span
                   key={skill.name}
-                  className="px-3 py-1.5 rounded-full text-sm glass text-white animate-float"
-                  style={{ animationDelay: `${index * 0.2}s` }}
+                  className="px-3 py-1.5 text-sm border border-white/15 text-muted"
                 >
                   {skill.name}
                 </span>

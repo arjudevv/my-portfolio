@@ -1,9 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { SceneProvider, useScene } from '@/three/SceneContext';
-import SceneManager from '@/three/SceneManager';
-import { useScrollStory } from '@/animations/scrollStory';
+import { useState } from 'react';
 import LoadingScreen from '@/components/loading/LoadingScreen';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/sections/HeroSection';
@@ -17,30 +14,19 @@ import AchievementsSection from '@/components/sections/AchievementsSection';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import ContactSection from '@/components/sections/ContactSection';
 import FooterSection from '@/components/sections/FooterSection';
-import type { SceneId } from '@/types/portfolio';
 import { cn } from '@/lib/utils';
 
-function PortfolioContent({
-  loaded,
-  onLoaded,
-}: {
-  loaded: boolean;
-  onLoaded: () => void;
-}) {
-  const { setActiveScene } = useScene();
-
-  const onSceneChange = useCallback(
-    (scene: SceneId) => setActiveScene(scene),
-    [setActiveScene]
-  );
-
-  useScrollStory(onSceneChange, undefined, loaded);
+export default function HomePage() {
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <>
-      {!loaded && <LoadingScreen onComplete={onLoaded} />}
+      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
       <div
-        className={cn('transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0 pointer-events-none')}
+        className={cn(
+          'transition-opacity duration-500',
+          loaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        )}
         aria-hidden={!loaded}
       >
         <a href="#hero" className="skip-link">
@@ -62,16 +48,5 @@ function PortfolioContent({
         <FooterSection />
       </div>
     </>
-  );
-}
-
-export default function HomePage() {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <SceneProvider>
-      <SceneManager enabled={loaded} />
-      <PortfolioContent loaded={loaded} onLoaded={() => setLoaded(true)} />
-    </SceneProvider>
   );
 }
